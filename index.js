@@ -15,6 +15,7 @@ require("dotenv").config();
 //MIDDLEWARE
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.json());
 setupRoutes(app);
 
 
