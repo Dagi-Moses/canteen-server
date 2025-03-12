@@ -47,7 +47,7 @@ router.post("/", async (req, res) => {
     }
   } catch (error) {
     console.error("Error verifying OTP:", error);
-    return res.status(500).send("Error verifying OTP");
+    return res.status(500).send("Error verifying OTP", error);
   }
 });
 

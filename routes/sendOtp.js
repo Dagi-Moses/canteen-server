@@ -48,7 +48,7 @@ router.post("/", async (req, res) => {
     res.status(200).send("OTP sent");
   } catch (error) {
     console.error("Error sending OTP:", error);
-    res.status(500).send("Error sending OTP");
+    res.status(500).send("Error sending OTP:", error);
   }
 });
 

@@ -16,6 +16,9 @@ require("dotenv").config();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
+app.get("/", (req, res) => {
+   res.send("Server is running! 🚀");
+ });
 setupRoutes(app);
 
 
