@@ -15,6 +15,10 @@ router.post("/", async (req, res) => {
     return res.status(400).send("Email is required");
   }
 
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.error("Missing email credentials in environment variables");
+    return res.status(500).json({ error: "Email service misconfiguration" });
+  }
   const otp = generateOtp();
   console.log("Generated OTP:", otp);
 
@@ -48,7 +52,8 @@ router.post("/", async (req, res) => {
     res.status(200).send("OTP sent");
   } catch (error) {
     console.error("Error sending OTP:", error);
-    res.status(500).send("Error sending OTP:", error);
+   res.status(500).json({ error: "Error sending OTP", details: error.message });
+
   }
 });
 
