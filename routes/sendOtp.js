@@ -29,6 +29,10 @@ router.post("/", async (req, res) => {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
+    tls: {
+      rejectUnauthorized: false, // Bypass strict SSL checking
+      minVersion: "TLSv1.2", 
+    },
   });
 
   const mailOptions = {

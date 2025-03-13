@@ -1,26 +1,29 @@
-require("dotenv").config();
-
 const admin = require("firebase-admin");
+const fs = require("fs");
 
-// const serviceAccount = require("../serviceAccountKey.json"); 
+// Path to the service account key in Render
+const serviceAccountPath = "/etc/secrets/serviceAccountKey.json";
+let serviceAccount;
 
-const serviceAccount = {
-  type: "service_account",
-  project_id: process.env.FIREBASE_PROJECT_ID,
-  private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
-  private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"), // Fix newlines
-  client_email: process.env.FIREBASE_CLIENT_EMAIL,
-  client_id: process.env.FIREBASE_CLIENT_ID,
-  auth_uri: process.env.FIREBASE_AUTH_URI,
-  token_uri: process.env.FIREBASE_TOKEN_URI,
-  auth_provider_x509_cert_url: process.env.FIREBASE_AUTH_PROVIDER,
-  client_x509_cert_url: process.env.FIREBASE_CLIENT_CERT_URL,
-  universe_domain: process.env.FIREBASE_UNIVERSE_DOMAIN,
-};
+if (fs.existsSync(serviceAccountPath)) {
+  // Read and parse the secret file in Render
+  serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, "utf8"));
+} else {
+  // Load from local file for development
+  try {
+    serviceAccount = require("../serviceAccountKey.json");
+  } catch (error) {
+    console.error(
+      "❌ No service account key found. Make sure it's in Render secrets or locally."
+    );
+    process.exit(1);
+  }
+}
 
+// Initialize Firebase Admin SDK
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: process.env.DATABASE_URL, // Replace <your-project-id> with your actual project ID.
+  databaseURL: process.env.DATABASE_URL, // Ensure DATABASE_URL is set in your environment
 });
 
 module.exports = admin;
